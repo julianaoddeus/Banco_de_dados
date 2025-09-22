@@ -35,6 +35,39 @@ UPDATE pedidos
 SET status = 'Cancelado'
 where id_pedido = 6;
 
+--------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION tg_validacao_preco_pedido()
+RETURNS TRIGGER AS $$
+BEGIN 
+    IF NEW.preco < 0 THEN
+        RAISE EXCEPTION 'Preço não pode ser negativo. Valor informado: %', NEW.preco;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validacao_preco
+BEFORE INSERT OR UPDATE ON produtos
+FOR EACH ROW
+EXECUTE FUNCTION tg_validacao_preco_pedido();
+
+INSERT INTO produtos(nome, preco, estoque)
+VALUES ('teste treigger', 20, 120);
+
+---------------------------------------------------------
+
+CREATE TABLE log_auditoria_produtos(
+    id_prod_audit   SERIAL PRIMARY Key,
+    id_produto      INT,
+    action          VARCHAR(10),
+    action_time     TIMESTAMP
+)
+
+
+SELECT * FROM log_auditoria where id_pedido = 6;
+
+
 -- Comandos para dropar se precisar
 -- DROP TRIGGER IF EXISTS trg_pedido_auditoria ON pedidos;
 -- DROP FUNCTION IF EXISTS tg_auditoria_pedido();
