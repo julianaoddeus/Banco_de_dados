@@ -28,14 +28,14 @@ CREATE TYPE reservation_status AS ENUM (
 -- ==============================================
 -- Tabelas principais
 -- ==============================================
-
+CREATE DATABASE sistema_biblioteca;
 CREATE TABLE students (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(125) NOT NULL,
     last_name VARCHAR(125) NOT NULL,    
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_number VARCHAR(20),
-    address VARCHAR(500),
+    address TEXT,
     membership_start DATE NOT NULL DEFAULT now(),
     membership_end DATE NOT NULL DEFAULT now()
 );
@@ -44,13 +44,13 @@ CREATE TABLE authors (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(125) NOT NULL,
     last_name VARCHAR(125) NOT NULL,
-    biography TEXTnb       
+    biography TEXT       
 );
 
 CREATE TABLE publishers (
     id SERIAL PRIMARY KEY,
     full_name VARCHAR(255) UNIQUE NOT NULL,
-    address VARCHAR(500),
+    address TEXT,
     phone_number VARCHAR(20),
     created_at DATE NOT NULL DEFAULT now(),
     updated_at DATE NOT NULL DEFAULT now()
@@ -70,15 +70,13 @@ CREATE TABLE books (
     total_quantity INTEGER NOT NULL DEFAULT 0,
     publisher_id INTEGER NOT NULL REFERENCES publishers(id),
     category_id INTEGER NOT NULL REFERENCES categories(id),
-    author_id INTEGER NOT NULL REFERENCES authors(id),
-    
+    author_id INTEGER NOT NULL REFERENCES authors(id)    
 );
-
 
 CREATE TABLE libraries (
     id SERIAL PRIMARY KEY,
     full_name VARCHAR(255) UNIQUE NOT NULL,
-    address VARCHAR(500),
+    address TEXT,
     phone_number VARCHAR(20),
     created_at DATE NOT NULL DEFAULT now(),
     updated_at DATE NOT NULL DEFAULT now()
@@ -92,8 +90,8 @@ CREATE TABLE librarians (
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_number VARCHAR(20),
     created_at DATE NOT NULL DEFAULT now(),
-    updated_at DATE NOT NULL DEFAULT now()
-    library_id INTEGER NOT NULL REFERENCES libraries(id),
+    updated_at DATE NOT NULL DEFAULT now(),
+    library_id INTEGER NOT NULL REFERENCES libraries(id)
 );
 
 CREATE TABLE book_copies (
@@ -111,9 +109,9 @@ CREATE TABLE loans (
     return_date DATE NULL,
     status loan_status NOT NULL DEFAULT 'EMPRESTADO',
     created_at DATE NOT NULL DEFAULT now(),
-    updated_at DATE NOT NULL DEFAULT now()
+    updated_at DATE NOT NULL DEFAULT now(),
     student_id INTEGER NOT NULL REFERENCES students(id),
-    book_copy_id INTEGER NOT NULL REFERENCES book_copies(id),
+    book_copy_id INTEGER NOT NULL REFERENCES book_copies(id)
 );
 
 CREATE TABLE reservations (
@@ -122,7 +120,7 @@ CREATE TABLE reservations (
     expiration_date DATE,
     status reservation_status NOT NULL DEFAULT 'PENDENTE',
     created_at DATE NOT NULL DEFAULT now(),
-    updated_at DATE NOT NULL DEFAULT now()
+    updated_at DATE NOT NULL DEFAULT now(),
     student_id INTEGER NOT NULL REFERENCES students(id),
-    book_copy_id INTEGER REFERENCES book_copies(id),
+    book_copy_id INTEGER REFERENCES book_copies(id)
 );
