@@ -130,3 +130,21 @@ VALUES
 ('Marina', 'Carvalho', 'EMP013', 'marina.carvalho@bibsantos.com', '13999990013', 13),
 ('Nicolas', 'Rodrigues', 'EMP014', 'nicolas.rodrigues@bibmanaus.com', '92999990014', 14),
 ('Olívia', 'Silva', 'EMP015', 'olivia.silva@bibgo.com', '62999990015', 15);
+
+
+-- em caso de popular com dados fictícios 
+/*
+  INSERT INTO students (first_name, last_name, email, phone_number, address, membership_start, membership_end)
+  SELECT
+      'Aluno' || i,
+      'Teste' || i,
+      'aluno' || i || '@email.com',
+      '1199999' || lpad(i::text, 4, '0'),
+      'Rua Exemplo, ' || i,
+      -- membership_start entre 2015 e 2024
+      DATE '2015-01-01' + (floor(random() * 3650)::int) * INTERVAL '1 day',
+      -- membership_end = start + até 2 anos
+      (DATE '2015-01-01' + (floor(random() * 3650)::int) * INTERVAL '1 day') 
+          + (floor(random() * 730)::int) * INTERVAL '1 day'
+  FROM generate_series(1, 20) AS s(i);
+*/
